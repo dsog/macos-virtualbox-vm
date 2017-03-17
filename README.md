@@ -4,8 +4,8 @@ Current macOS version: *Sierra (10.12)*, tested with VirtualBox *5.1.6 r110634*
 
 To build a VM running macOS, follow the directions below:
 
-  1. Download the installer from Mac App Store (it should be available in the 'Purchases' section if you've acquired it previously). The installer will be placed in your Applications folder.  (Should work for Yosemite, El Capitan and Sierra - 10.10-10.12.)
-  2. Make the script executable and run it: `chmod +x prepare-iso.sh && ./prepare-iso.sh`.
+  1. Download the installer from Mac App Store (it should be available in the 'Purchases' section if you've acquired it previously). The installer will be placed in your Applications folder.
+  2. Run `./prepare-iso.sh`.
 
       If the script fails to find the installer you can specify its path as the first parameter. By default, the output is saved as <Yosemite|El Capitan|Sierra>.iso on the Desktop. You can change this using the second parameter.
       Example:
@@ -18,7 +18,19 @@ To build a VM running macOS, follow the directions below:
       - type: `OS X`
       - version: `Mac OS X 10.11 El Capitan (64-bit)` or `macOS Sierra`, if your version of VirtualBox has been updated to include it.
   5. Follow the rest of the VM creation wizard and either leave the defaults or adjust to your liking. You may want to increase the video memory from the VirtualBox default of 16MB to 64MB or 128MB. While the current release of macOS Sierra does boot with just 16MB, interace performance is severly constraint.
-  6. In Terminal, run the command `VBoxManage modifyvm "{vmname}" --cpuidset 00000001 000306a9 00020800 80000201 178bfbff` (where `"{vmname}"` is the exact name of the VM set in step 4) so the VM has the right CPU settings for macOS.
+  6. In Terminal, run the following commands 
+
+      ```
+      VBoxManage modifyvm "vmname" --cpuidset 00000001 000306a9 00020800 80000201 178bfbff
+      VBoxManage setextradata "vmname" "VBoxInternal/Devices/efi/0/Config/DmiSystemProduct" "iMac11,3"
+      VBoxManage setextradata "vmname" "VBoxInternal/Devices/efi/0/Config/DmiSystemVersion" "1.0"
+      VBoxManage setextradata "vmname" "VBoxInternal/Devices/efi/0/Config/DmiBoardProduct" "Iloveapple"
+      VBoxManage setextradata "vmname" "VBoxInternal/Devices/smc/0/Config/DeviceKey" "ourhardworkbythesewordsguardedpleasedontsteal(c)AppleComputerInc"
+      VBoxManage setextradata "vmname" "VBoxInternal/Devices/smc/0/Config/GetKeyFromRealSMC" 1
+      ```
+    
+      where `"vmname"` is the exact name of the VM set in step (4) so the VM has the right CPU settings for macOS.
+
   7. To prevent choppiness in the VM, go into settings and uncheck the 'Enable Audio' option under 'Audio'.
   8. Click 'Start' to boot the new VM.
   9. Select the iso created in step 2 when VirtualBox asks for it.
